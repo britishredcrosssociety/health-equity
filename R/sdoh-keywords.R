@@ -2,6 +2,7 @@ library(tidyverse)
 library(janitor)
 library(geographr)
 library(IMD)
+library(broom)
 
 # ---- UK-wide deprivation deciles ----
 uk_imd <-
@@ -96,3 +97,30 @@ referrals_sdoh |> sdoh_table(`Reported Disability`, `Social isolation`)
 
 # Neighbourhood deprivation
 referrals_sdoh |> sdoh_table(IMD_quintile, `Social isolation`)
+
+# ---- What factors are the strongest predictors of social isolation? ----
+# Standardise covariates over 2 standard deviations so numeric and categorical predictors can be directly compared
+referrals_sdoh_model <-
+  referrals_sdoh |>
+  select(`Social isolation`, Age, Gender, Ethnicity, `Living Arrangement`, `Reported Disability`, IMD_quintile) |>
+  # mutate(across(-`Social isolation`, \(x) (x - mean(x, na.rm = TRUE)) / 2 * sd(x, na.rm = TRUE))) |>
+  drop_na() |>
+
+  # Create reference categories for logistic regression
+  mutate(
+    Gender = fct_relevel(Gender, "No Data"),
+    Ethnicity = fct_relevel(Ethnicity, "No Data"),
+    `Living Arrangement` = fct_relevel(`Living Arrangement`, "No Data"),
+    `Reported Disability` = fct_relevel(`Reported Disability`, "No data")
+  )
+
+mod_isolation <- glm(`Social isolation` ~ ., data = referrals_sdoh_model, family = binomial)
+
+glance(mod_isolation)
+
+mod_isolation |>
+  tidy(exponentiate = TRUE)
+
+#TODO: plot ORs with confidence intervals
+
+#TODO in future, when we have several social determinants labelled: multinomial logistic regression?
