@@ -1,0 +1,297 @@
+﻿Term,Housing or utility,Transportation,Food,Medication or medical,Social isolation,"Abuse, neglect, or exploitation",Financial difficulty
+A Ride,0,1,0,0,0,0,1
+A-ride,0,1,0,0,0,0,1
+A-Ride,0,1,0,0,0,0,1
+abandonment,0,0,0,0,1,0,0
+access barrier of transportation,0,1,0,0,0,0,0
+Adult Protective Services,0,0,0,0,0,1,0
+adult protective services,0,0,0,0,0,1,0
+adult social work funds used,0,1,0,0,0,0,1
+apartment in poor condition,1,0,0,0,0,0,0
+aps,0,0,0,0,0,1,0
+APS,0,0,0,0,0,1,0
+ARide,0,1,0,0,0,0,1
+aride,0,1,0,0,0,0,1
+arrange a wheelchair van,0,1,0,0,0,0,0
+assistance for prescription,0,0,0,1,0,0,1
+assistance with funding,0,0,0,0,0,0,1
+assistance with transportation,0,1,0,0,0,0,1
+Bridge card,0,0,0,0,0,0,1
+bridge card,0,0,0,0,0,0,1
+bus token,0,1,0,0,0,0,1
+cab provided,0,1,0,0,0,0,1
+can not access food/water,0,0,1,0,0,0,0
+cannot access food/water,0,0,1,0,0,0,0
+cannot afford a cab,0,1,0,0,0,0,1
+cannot afford a wheelchair van,0,1,0,0,0,0,1
+cannot afford cab,0,1,0,0,0,0,1
+cannot afford transportation,0,1,0,0,0,0,1
+cannot afford wheelchair van,0,1,0,0,0,0,1
+cannot cook,0,0,1,0,0,0,0
+cannot drive,0,1,0,0,0,0,0
+cannot pay for a cab,0,1,0,0,0,0,1
+cannot pay for a wheelchair van,0,1,0,0,0,0,1
+cannot pay for cab,0,1,0,0,0,0,1
+cannot pay for prescription,0,0,0,1,0,0,1
+cannot pay for prescriptions,0,0,0,1,0,0,1
+cannot pay for wheelchair van,0,1,0,0,0,0,1
+Care Transport,0,1,0,0,0,0,0
+Care transport,0,1,0,0,0,0,0
+care transport,0,1,0,0,0,0,0
+Care Transportation,0,1,0,0,0,0,0
+care transportation,0,1,0,0,0,0,0
+Care Transports,0,1,0,0,0,0,0
+charity care,0,0,0,1,0,0,1
+cluttered home,1,0,0,0,0,0,0
+cluttered house,1,0,0,0,0,0,0
+CMH,0,0,0,0,0,0,1
+cmh,0,0,0,0,0,0,1
+co pay,0,0,0,1,0,0,1
+co-pay,0,0,0,1,0,0,1
+cold at home,1,0,0,0,0,0,1
+Community Mental Health,0,0,0,0,0,0,1
+community mental health,0,0,0,0,0,0,1
+community support & treatment services,0,0,0,0,0,0,1
+community support and treatment services,0,0,0,0,0,0,1
+consult regarding transportation,0,1,0,0,0,0,0
+copay,0,0,0,1,0,0,1
+copay is a financial concern,0,0,0,1,0,0,1
+CSTS,0,0,0,0,0,0,1
+csts,0,0,0,0,0,0,1
+delonis,1,0,0,0,1,0,1
+delonis center,1,0,0,0,1,0,1
+department of health and human services,0,0,0,0,0,0,1
+department of human services,0,0,0,0,0,0,1
+deplorable condition,1,0,0,0,0,0,0
+deplorable home,1,0,0,0,0,0,0
+deplorable house,1,0,0,0,0,0,0
+deterioration of patient's home,1,0,0,0,0,0,0
+DHHS,0,0,0,0,0,0,1
+dhhs,0,0,0,0,0,0,1
+dhs,0,0,0,0,0,0,1
+DHS/Medicaid,0,0,0,0,0,0,1
+difficulty affording her medication,0,0,0,1,0,0,1
+difficulty affording his medication,0,0,0,1,0,0,1
+difficulty affording medication,0,0,0,1,0,0,1
+difficulty obtaining transportation,0,1,0,0,0,0,0
+difficulty paying for medication,0,0,0,1,0,0,1
+discharge funds,0,1,0,0,0,0,1
+discharge transportation,0,1,0,0,0,0,0
+discount parking pass,0,0,0,0,0,0,1
+discount parking passes,0,0,0,0,0,0,1
+discounted parking pass,0,0,0,0,0,0,1
+discounted parking passes,0,0,0,0,0,0,1
+don't get along with social support,0,0,0,0,1,0,0
+don't have a ride,0,1,0,0,0,0,0
+drifter,1,0,1,0,1,0,1
+estranged,0,0,0,0,1,0,0
+evict,1,0,0,0,0,0,1
+evicted,1,0,0,0,0,0,1
+eviction,1,0,0,0,0,0,1
+fecal incontinence,1,0,0,0,0,0,0
+feces,1,0,0,0,0,0,0
+feeling lonely,0,0,0,0,1,0,0
+few people to speak with,0,0,0,0,1,0,0
+few social supports,0,0,0,0,1,0,0
+financial assistance,0,0,0,0,0,0,1
+financial barrier to discharge,0,0,0,0,0,0,1
+financial barriers to d/c,0,0,0,0,0,0,1
+Financial Barriers to DC,0,0,0,0,0,0,1
+financial barriers to dc,0,0,0,0,0,0,1
+financial barriers to DC,0,0,0,0,0,0,1
+financial barriers to discharge,0,0,0,0,0,0,1
+financial exploitation,0,0,0,0,0,1,0
+financial limitation,0,0,0,0,0,0,1
+financial limitations,0,0,0,0,0,0,1
+financially draining,0,0,0,0,0,0,1
+financially exploiting,0,0,0,0,0,1,0
+food bank,0,0,1,0,0,0,1
+food stamp,0,0,1,0,0,0,1
+food stamps,0,0,1,0,0,0,1
+funded transportation,0,1,0,0,0,0,1
+gas assistance,0,1,0,0,0,0,1
+gas card,0,1,0,0,0,0,1
+Green cab,0,1,0,0,0,0,1
+Green Cab,0,1,0,0,0,0,1
+green cab,0,1,0,0,0,0,1
+has no discharge transportation,0,1,0,0,0,0,0
+have no discharge transportation,0,1,0,0,0,0,0
+home in poor condition,1,0,0,0,0,0,0
+homeless,1,0,1,0,1,0,1
+homelessness,1,0,1,0,1,0,1
+house in poor condition,1,0,0,0,0,0,0
+houseless,1,0,1,0,1,0,1
+imn,0,0,0,0,0,0,1
+IMN,0,0,0,0,0,0,1
+income guidelines,0,0,0,0,0,0,1
+Independent Medical network,0,0,0,0,0,0,1
+Independent Medical Network,0,0,0,0,0,0,1
+independent medical network,0,0,0,0,0,0,1
+insurance funded transportation,0,1,0,0,0,0,1
+insurance sponsored transportation,0,1,0,0,0,0,1
+insurance would not pay,0,0,0,1,0,0,0
+isolated,0,0,0,0,1,0,0
+lack of food,0,0,1,0,0,0,1
+lack of suitable transport,0,1,0,0,0,0,1
+lack of transportation,0,1,0,0,0,0,1
+limited finances,0,0,0,0,0,0,1
+limited income,0,0,0,0,0,0,1
+limited social support,0,0,0,0,1,0,0
+little contact with others,0,0,0,0,1,0,0
+little food,0,0,1,0,0,0,0
+live by herself,0,0,0,0,1,0,0
+live by himself,0,0,0,0,1,0,0
+lived by herself,0,0,0,0,1,0,0
+lived by himself,0,0,0,0,1,0,0
+lives by herself,0,0,0,0,1,0,0
+lives by himself,0,0,0,0,1,0,0
+lives on her own,0,0,0,0,1,0,0
+lives on his own,0,0,0,0,1,0,0
+living by herself,0,0,0,0,1,0,0
+living by himself,0,0,0,0,1,0,0
+living in the shelter,1,0,0,0,1,0,1
+living on the street,1,0,1,0,1,0,1
+living on the streets,1,0,1,0,1,0,1
+lodging assistance,0,0,0,0,0,0,1
+lodging covered by social work funds,0,0,0,0,0,0,1
+lodging covered by SW funds,0,0,0,0,0,0,1
+logisticare,0,1,0,0,0,0,1
+Logisticare,0,1,0,0,0,0,1
+lonely,0,0,0,0,1,0,0
+loner,0,0,0,0,1,0,0
+low income housing,0,0,0,0,0,0,1
+M Support,0,0,0,1,0,0,1
+M-support,0,0,0,1,0,0,1
+meal assistance,0,0,0,0,0,0,1
+Meals on Wheels,0,0,1,0,0,0,1
+meals on wheels,0,0,1,0,0,0,1
+Meals-on-Wheels,0,0,1,0,0,0,1
+meals-on-wheels,0,0,1,0,0,0,1
+MEDICAID,0,0,0,0,0,0,1
+medicaid,0,0,0,0,0,0,1
+Medicaid,0,0,0,0,0,0,1
+medicaid transportation,0,1,0,0,0,0,1
+Medicaid transportation,0,1,0,0,0,0,1
+medication not renewed,0,0,0,1,0,0,0
+medication overdue,0,0,0,1,0,0,0
+MI bridge,0,0,0,0,0,0,1
+MI Bridges,0,0,0,0,0,0,1
+mi choice,0,0,0,0,0,0,1
+mi choices,0,0,0,0,0,0,1
+MiBridges,0,0,0,0,0,0,1
+MSupport,0,0,0,1,0,0,1
+need help affording her medication,0,0,0,1,0,0,1
+need help affording his medication,0,0,0,1,0,0,1
+need help affording medication,0,0,0,1,0,0,1
+needs ride,0,1,0,0,0,0,0
+night ride,0,1,0,0,0,0,1
+no adult children,0,0,0,0,1,0,0
+no car,0,1,0,0,0,0,0
+no children,0,0,0,0,1,0,0
+no familial support,0,0,0,0,1,0,0
+no family,0,0,0,0,1,0,0
+no family or friend,0,0,0,0,1,0,0
+no family or social support,0,0,0,0,1,0,0
+no family support,0,0,0,0,1,0,0
+no groceries,0,0,1,0,0,0,0
+no grocery,0,0,1,0,0,0,0
+no kids,0,0,0,0,1,0,0
+no living family,0,0,0,0,1,0,0
+no lodging,1,0,1,0,1,0,1
+no longer covered by insurance,0,0,0,1,0,0,1
+no prescription coverage,0,0,0,1,0,0,1
+no savings,0,0,0,0,0,0,1
+no social support,0,0,0,0,1,0,0
+no transit,0,1,0,0,0,0,0
+nomadic,1,0,1,0,1,0,1
+not able to cook,0,0,1,0,0,0,0
+not able to drive,0,1,0,0,0,0,0
+not covered by insurance,0,0,0,1,0,0,1
+not habitable,1,0,0,0,0,0,0
+not have discharge transportation,0,1,0,0,0,0,0
+not have friends or family,0,0,0,0,1,0,0
+not having transportation,0,1,0,0,0,0,0
+Ok to Bill,0,0,0,1,0,0,1
+OK to Bill,0,0,0,1,0,0,1
+ok to bill,0,0,0,1,0,0,1
+OK-to-Bill,0,0,0,1,0,0,1
+ok-to-bill,0,0,0,1,0,0,1
+okay to bill,0,0,0,1,0,0,1
+okay-to-bill,0,0,0,1,0,0,1
+PACE,0,0,0,0,0,0,1
+Pace,0,0,0,0,0,0,1
+pace,0,0,0,0,0,0,1
+parking pass,0,0,0,0,0,0,1
+permanent housing,1,0,0,0,0,0,0
+poor public transportation,0,1,0,0,0,0,0
+prescription assistance,0,0,0,1,0,0,1
+prescription copay is a financial concern,0,0,0,1,0,0,1
+prescription is a financial concern,0,0,0,1,0,0,1
+problem getting help,0,0,0,0,1,0,0
+refuse to come pick up,0,1,0,0,0,0,0
+refuse to pick up,0,1,0,0,0,0,0
+refused to come pick up,0,1,0,0,0,0,0
+refused to pick up,0,1,0,0,0,0,0
+salvation army housing,1,0,0,0,1,0,1
+schip,0,0,0,0,0,0,1
+section 8,0,0,0,0,0,0,1
+shelter,1,0,0,0,1,0,1
+sleeping in park,1,0,1,0,1,0,1
+SNAP,0,0,1,0,0,0,1
+snap,0,0,1,0,0,0,1
+social work funds,0,0,0,0,0,0,1
+Social work to cover cost of transportation,0,1,0,0,0,0,1
+socialization,0,0,0,0,1,0,0
+socially isolated,0,0,0,0,1,0,0
+staying on the street,1,0,1,0,1,0,1
+staying on the streets,1,0,1,0,1,0,1
+street person,1,0,1,0,1,0,1
+struggled using bus,0,1,0,0,0,0,0
+struggled using train,0,1,0,0,0,0,0
+SW funds,0,0,0,0,0,0,1
+Sw funds,0,0,0,0,0,0,1
+SW paid,0,0,0,0,0,0,1
+SW to cover cost of transportation,0,1,0,0,0,0,1
+SW to pay,0,0,0,0,0,0,1
+taken advantage of financially,0,0,0,0,0,1,0
+terrible shape,1,0,0,0,0,0,0
+too expensive,0,0,0,0,0,0,1
+transport via SW funds,0,1,0,0,0,0,1
+transport with SW funds,0,1,0,0,0,0,1
+transportation assistance,0,1,0,0,0,0,0
+transportation barrier,0,1,0,0,0,0,0
+transportation benefit,0,1,0,0,0,0,1
+transportation challenge,0,1,0,0,0,0,0
+transportation problems,0,1,0,0,0,0,0
+transportation via SW funds,0,1,0,0,0,0,1
+transportation with SW funds,0,1,0,0,0,0,1
+transportation-related barrier,0,1,0,0,0,0,0
+unable to afford,0,0,0,0,0,0,1
+unable to commute,0,1,0,0,0,0,0
+unable to cook,0,0,1,0,0,0,0
+unable to drive,0,1,0,0,0,0,0
+unable to pay bills,0,0,0,0,0,0,1
+unable to pay for prescription,0,0,0,1,0,0,1
+unable to pay for prescriptions,0,0,0,1,0,0,1
+underinsured,0,0,0,1,0,0,1
+unfortunate home,1,0,0,0,0,0,0
+unfortunate house,1,0,0,0,0,0,0
+unhoused,1,0,1,0,1,0,1
+uninhabitable home,1,0,0,0,0,0,0
+uninhabitable house,1,0,0,0,0,0,0
+uninsured,0,0,0,1,0,0,1
+unkempt home,1,0,0,0,0,0,0
+unkempt house,1,0,0,0,0,0,0
+unstable housing,1,0,0,0,0,0,1
+vagabond,1,0,1,0,1,0,1
+verbally abusive,0,0,0,0,0,1,0
+will call cab,0,1,0,0,0,0,1
+will call taxi,0,1,0,0,0,0,1
+will-call cab,0,1,0,0,0,0,1
+will-call taxi,0,1,0,0,0,0,1
+withholding clothes,0,0,0,0,0,1,0
+withholding money,0,0,0,0,0,1,0
+without family,0,0,0,0,1,0,0
+without food,0,0,1,0,0,0,0
+without medication,0,0,0,1,0,0,1
+without medications,0,0,0,1,0,0,1
