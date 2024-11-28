@@ -4,6 +4,14 @@ library(geographr)
 library(IMD)
 library(broom)
 
+# Install package to explore Relative Importance of Regressors in Linear Models
+# https://cran.r-project.org/web/packages/relaimpo/relaimpo.pdf
+# The package maintainer says there's functionality on a version available via her website that isn't on CRAN.
+# First, install from CRAN, then install from source, downloaded via https://prof.bht-berlin.de/groemping/software/relaimpo2-1
+# install.packages("relaimpo")
+# install.packages("C:/Users/040026704/Downloads/relaimpo_2.2-5.zip", repos = NULL, type="source")
+library(relaimpo)
+
 # ---- UK-wide deprivation deciles ----
 uk_imd <-
   bind_rows(
@@ -122,5 +130,7 @@ mod_isolation |>
   tidy(exponentiate = TRUE)
 
 #TODO: plot ORs with confidence intervals
+
+#TODO: use relaimpo to quantify relative importance of predictors
 
 #TODO in future, when we have several social determinants labelled: multinomial logistic regression?
