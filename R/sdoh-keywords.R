@@ -3,6 +3,8 @@ library(janitor)
 library(geographr)
 library(IMD)
 library(broom)
+library(ggstats)
+library(arrow)
 
 # Install package to explore Relative Importance of Regressors in Linear Models
 # https://cran.r-project.org/web/packages/relaimpo/relaimpo.pdf
@@ -11,6 +13,9 @@ library(broom)
 # install.packages("relaimpo")
 # install.packages("C:/Users/040026704/Downloads/relaimpo_2.2-5.zip", repos = NULL, type="source")
 library(relaimpo)
+
+conflicted::conflict_prefer("select", "dplyr")
+conflicted::conflict_prefer("filter", "dplyr")
 
 # ---- UK-wide deprivation deciles ----
 uk_imd <-
@@ -58,15 +63,60 @@ sdoh_keywords_alz_isolation <-
 # Convert to a regular expression
 sdoh_keywords_alz_isolation <- paste(sdoh_keywords_alz_isolation, collapse = "|")
 
+sdoh_keywords_alz_long <-
+  sdoh_keywords_alz |>
+  pivot_longer(cols = where(is.double), names_to = "Determinant")
+
+# Create a regular expression for each social determinant
+sdoh_regex <-
+  unique(sdoh_keywords_alz_long$Determinant) |>
+  map_dfr(~ {
+    determinant <- .x
+    regex_string <- sdoh_keywords_alz_long |>
+      filter(Determinant == determinant, value == 1) |>
+      pull(Term) |>
+      paste(collapse = "|")
+    tibble(Determinant = determinant, regex_string = regex_string)
+  })
+
 # ---- Rule-based approach to identifying social determinants ----
 referrals_sdoh <-
   referrals |>
   mutate(`Social isolation` = case_when(
-    str_detect(Notes, sdoh_keywords_alz_isolation) ~ 1,
+    str_detect(Notes, sdoh_regex |> filter(str_detect(Determinant, "isolation")) |> pull(regex_string)) ~ 1,
+    .default = 0
+  )) |>
+  mutate(`Housing` = case_when(
+    str_detect(Notes, sdoh_regex |> filter(str_detect(Determinant, "Housing")) |> pull(regex_string)) ~ 1,
+    .default = 0
+  )) |>
+  mutate(`Transport` = case_when(
+    str_detect(Notes, sdoh_regex |> filter(str_detect(Determinant, "Transport")) |> pull(regex_string)) ~ 1,
+    .default = 0
+  )) |>
+  mutate(`Food` = case_when(
+    str_detect(Notes, sdoh_regex |> filter(str_detect(Determinant, "Food")) |> pull(regex_string)) ~ 1,
+    .default = 0
+  )) |>
+  mutate(`Medication` = case_when(
+    str_detect(Notes, sdoh_regex |> filter(str_detect(Determinant, "Medication")) |> pull(regex_string)) ~ 1,
+    .default = 0
+  )) |>
+  mutate(`Abuse` = case_when(
+    str_detect(Notes, sdoh_regex |> filter(str_detect(Determinant, "Abuse")) |> pull(regex_string)) ~ 1,
+    .default = 0
+  )) |>
+  mutate(`Financial difficulty` = case_when(
+    str_detect(Notes, sdoh_regex |> filter(str_detect(Determinant, "Financial difficulty")) |> pull(regex_string)) ~ 1,
     .default = 0
   ))
 
+# Save
+arrow::write_csv_arrow(referrals_sdoh, "data/referrals-sdoh.csv")
+
 # ---- Explore social determinants ----
+referrals_sdoh <- arrow::read_csv_arrow("data/referrals-sdoh.csv")
+
 # How many records are labelled as socially isolated?
 referrals_sdoh |>
   count(`Social isolation`) |>
@@ -127,10 +177,77 @@ mod_isolation <- glm(`Social isolation` ~ ., data = referrals_sdoh_model, family
 glance(mod_isolation)
 
 mod_isolation |>
-  tidy(exponentiate = TRUE)
+  tidy(exponentiate = TRUE, conf.int = TRUE)
 
 #TODO: plot ORs with confidence intervals
+coef_isolation <- ggcoef_model(mod_isolation, exponentiate = TRUE, conf.int = FALSE, return_data = TRUE)
+
+coef_isolation$conf.low <- coef_isolation$estimate - coef_isolation$std.error * 1.96
+coef_isolation$conf.high <- coef_isolation$estimate + coef_isolation$std.error * 1.96
+
+ggcoef_plot(coef_isolation, exponentiate = TRUE)
 
 #TODO: use relaimpo to quantify relative importance of predictors
 
 #TODO in future, when we have several social determinants labelled: multinomial logistic regression?
+
+# ---- People with multiple social determinants ----
+referrals_sdoh <-
+  referrals_sdoh |>
+  mutate(total_sdoh = rowSums(across(`Social isolation`:`Financial difficulty`)))
+
+referrals_sdoh |>
+  count(total_sdoh) |>
+  mutate(prop = n/sum(n))
+
+
+# Co-occurrence matrix of social determinants
+# Source: https://stackoverflow.com/a/10623146
+referrals_sdoh_matrix <-
+  referrals_sdoh |>
+  select(`Social isolation`:`Financial difficulty`) |>
+  as.matrix()
+sdoh_co_occurence <- crossprod(referrals_sdoh_matrix)  # Same as: t(X) %*% X
+diag(sdoh_co_occurence) <- 0       # (b/c you don't count co-occurrences of an aspect with itself)
+sdoh_co_occurence
+
+# Correlation matrix for social determinants
+referrals_sdoh_cor <- round(cor(referrals_sdoh_matrix),2)
+
+# Plot co-occurrence / correlation matrix
+# Source: https://www.sthda.com/english/wiki/ggplot2-quick-correlation-matrix-heatmap-r-software-and-data-visualization
+# Use correlation between variables as distance
+reorder_cormat <- function(cormat){
+  dd <- as.dist((1-cormat)/2)
+  hc <- hclust(dd)
+  cormat <-cormat[hc$order, hc$order]
+}
+# Get lower triangle of the correlation matrix
+get_lower_tri<-function(cormat){
+  cormat[upper.tri(cormat)] <- NA
+  return(cormat)
+}
+# Get upper triangle of the correlation matrix
+get_upper_tri <- function(cormat){
+  cormat[lower.tri(cormat)]<- NA
+  return(cormat)
+}
+
+referrals_sdoh_cor |>
+  reorder_cormat() |>
+  get_lower_tri() |>
+  as.table() |>
+  as.data.frame() |>
+
+  ggplot(aes(x = Var1, y = Var2, fill = Freq)) +
+  geom_tile(color = "white") +
+  scale_fill_gradient2(
+    low = "blue", high = "red", mid = "white",
+    midpoint = 0, limit = c(-1,1), space = "Lab", na.value = NA,
+    name="Correlation"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, vjust = 1, size = 12, hjust = 1)
+  ) +
+  coord_fixed()
