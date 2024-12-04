@@ -1,8 +1,6 @@
 library(tidyverse)
-library(janitor)
 library(geographr)
 library(IMD)
-library(arrow)
 
 conflicted::conflict_prefer("select", "dplyr")
 conflicted::conflict_prefer("filter", "dplyr")
@@ -37,12 +35,6 @@ referrals <-
   left_join(uk_imd, by = "lsoa11_code")
 
 #TODO: Add Northern Ireland postcodes --> SOA 2011 lookup, then add their IMD data
-
-# ---- Summary stats ----
-# Total number of people (rather than records)
-referrals |>
-  distinct(PSN) |>
-  count()
 
 # ---- Load keywords ----
 # Keywords to identify social determinants of health - among people with Alzheimer's disease
@@ -108,4 +100,4 @@ referrals_sdoh <-
   ))
 
 # Save
-arrow::write_csv_arrow(referrals_sdoh, "data/referrals-sdoh.csv")
+write_csv(referrals_sdoh, "data/referrals-sdoh.csv")

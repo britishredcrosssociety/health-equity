@@ -2,7 +2,6 @@ library(tidyverse)
 library(janitor)
 library(broom)
 library(ggstats)
-library(arrow)
 
 # Install package to explore Relative Importance of Regressors in Linear Models
 # https://cran.r-project.org/web/packages/relaimpo/relaimpo.pdf
@@ -16,11 +15,17 @@ conflicted::conflict_prefer("select", "dplyr")
 conflicted::conflict_prefer("filter", "dplyr")
 
 # ---- Load and wrangle social determinants data ----
-referrals_sdoh <- arrow::read_csv_arrow("data/referrals-sdoh.csv")
+referrals_sdoh <- read_csv("data/referrals-sdoh.csv")
 
 referrals_sdoh |>
   select(PSN, `Social isolation`:`Financial difficulty`) |>
   distinct()
+
+# ---- Summary stats ----
+# Total number of people (rather than records)
+referrals |>
+  distinct(PSN) |>
+  count()
 
 # ---- Explore social determinants ----
 # How many records are labelled as socially isolated?
