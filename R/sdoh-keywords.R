@@ -203,6 +203,7 @@ referrals_sdoh <-
   mutate(total_sdoh = rowSums(across(`Social isolation`:`Financial difficulty`)))
 
 referrals_sdoh |>
+  distinct(PSN, total_sdoh) |>
   count(total_sdoh) |>
   mutate(prop = n/sum(n))
 
@@ -308,7 +309,7 @@ referrals_sdoh_trends |>
   # facet_wrap(~Determinant) +
   theme_classic()
 
-# How many people have different numbers of social determinants at different times?
+# ---- How many people have different numbers of social determinants at different times? ----
 referrals_sdoh |>
   select(PSN, `Social isolation`:`Financial difficulty`) |>
   pivot_longer(cols = -PSN, names_to = "Determinant") |>
