@@ -48,6 +48,12 @@ referrals <-
 
 #TODO: Add Northern Ireland postcodes --> SOA 2011 lookup, then add their IMD data
 
+# ---- Summary stats ----
+# Total number of people (rather than records)
+referrals |>
+  distinct(PSN) |>
+  count()
+
 # ---- Load keywords ----
 # Keywords to identify social determinants of health - among people with Alzheimer's disease
 # From eTable 2. A lexicon of terms used to identify social determinants of health
@@ -200,15 +206,16 @@ referrals_sdoh |>
   count(total_sdoh) |>
   mutate(prop = n/sum(n))
 
-
-# Co-occurrence matrix of social determinants
+# ---- Co-occurrence matrix of social determinants ----
 # Source: https://stackoverflow.com/a/10623146
 referrals_sdoh_matrix <-
   referrals_sdoh |>
   select(`Social isolation`:`Financial difficulty`) |>
   as.matrix()
+
 sdoh_co_occurence <- crossprod(referrals_sdoh_matrix)  # Same as: t(X) %*% X
-diag(sdoh_co_occurence) <- 0       # (b/c you don't count co-occurrences of an aspect with itself)
+diag(sdoh_co_occurence) <- 0  # (b/c you don't count co-occurrences of an aspect with itself)
+
 sdoh_co_occurence
 
 # Correlation matrix for social determinants
@@ -233,6 +240,10 @@ get_upper_tri <- function(cormat){
   return(cormat)
 }
 
+cor.test(referrals_sdoh_matrix)
+
+Hmisc::rcorr(referrals_sdoh_matrix)
+
 referrals_sdoh_cor |>
   reorder_cormat() |>
   get_lower_tri() |>
@@ -251,3 +262,58 @@ referrals_sdoh_cor |>
     axis.text.x = element_text(angle = 45, vjust = 1, size = 12, hjust = 1)
   ) +
   coord_fixed()
+
+# ---- Explore the correlated / co-occurring social determinants ----
+# Count the number of these social determinants for each record
+referrals_sdoh_selected <-
+  referrals_sdoh |>
+  mutate(total_selected_sdoh = rowSums(across(c(`Social isolation`, Housing, Food, `Financial difficulty`))))
+
+# How many people have more than one of: social isolation, housing, food, and financial difficulty?
+referrals_sdoh_selected |>
+  filter(total_selected_sdoh > 1) |>
+  distinct(PSN) |>
+  count()
+
+referrals_sdoh_selected |>
+  distinct(PSN, total_selected_sdoh) |>
+  count(total_selected_sdoh)
+
+# ---- Trends in social determinants ----
+referrals_sdoh_trends <-
+  referrals_sdoh |>
+  filter(year(`Referral Date`) > 2017) |>
+  mutate(month_year = ym(paste0(year(`Referral Date`), " ", month(`Referral Date`)))) |>
+  relocate(month_year) |>
+
+  select(month_year, PSN, `Social isolation`:`Financial difficulty`) |>
+  distinct() |>
+  pivot_longer(cols = -c(month_year, PSN), names_to = "Determinant") |>
+
+  group_by(month_year, Determinant) |>
+  summarise(count = sum(value)) |>
+  ungroup() |>
+
+  group_by(month_year) |>
+  mutate(total = sum(count)) |>
+  ungroup() |>
+
+  mutate(prop = count / total)
+
+referrals_sdoh_trends |>
+  mutate(Determinant = fct_relevel(Determinant, "Medication", "Abuse", "Transport", "Food", "Housing", "Financial difficulty", "Social isolation")) |>
+
+  ggplot(aes(x = month_year, y = prop, group = Determinant, colour = Determinant, fill = Determinant)) +
+  geom_area() +
+  # facet_wrap(~Determinant) +
+  theme_classic()
+
+# How many people have different numbers of social determinants at different times?
+referrals_sdoh |>
+  select(PSN, `Social isolation`:`Financial difficulty`) |>
+  pivot_longer(cols = -PSN, names_to = "Determinant") |>
+  filter(value == 1) |>
+
+  group_by(PSN, Determinant) |>
+  summarise(count = sum(value))
+
