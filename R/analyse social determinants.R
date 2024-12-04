@@ -17,26 +17,69 @@ conflicted::conflict_prefer("filter", "dplyr")
 # ---- Load and wrangle social determinants data ----
 referrals_sdoh <- read_csv("data/referrals-sdoh.csv")
 
-referrals_sdoh |>
+# Make a dataset with only individual people (identified by PSN) and the social determinants
+people_sdoh <-
+  referrals_sdoh |>
   select(PSN, `Social isolation`:`Financial difficulty`) |>
-  distinct()
+  distinct() |>
+  mutate(total_sdoh = rowSums(across(`Social isolation`:`Financial difficulty`)))
+
+# These two PSN numbers seem to refer to multiple people - remove them for now
+people_sdoh <-
+  people_sdoh |>
+  filter(!PSN %in% c("PSN-158392", "PSN-099099"))
 
 # ---- Summary stats ----
 # Total number of people (rather than records)
-referrals |>
+people_sdoh |>
   distinct(PSN) |>
   count()
 
-# ---- Explore social determinants ----
-# How many records are labelled as socially isolated?
-referrals_sdoh |>
-  count(`Social isolation`) |>
-  mutate(prop = n/sum(n))
+# How many people experienced 0, 1, or more social determinants
+people_sdoh |>
+  group_by(PSN) |>
+  summarise(Total = sum(total_sdoh)) |>
+  ungroup() |>
+  filter(Total >= 6)
+  count(Total)
+#--> This might not actually be people, since (in some cases) one PSN clearly refers to multiple different people
 
+
+# ---- Explore social determinants ----
+
+
+# ---- Select some example free-text notes for some social determinants ----
 referrals_sdoh |>
   filter(`Social isolation` == 1) |>
   select(Notes) |>
   View()
+
+
+
+# ---- How many people experienced which social determinants? ----
+sdoh_people_total <-
+  people_sdoh |>
+  pivot_longer(cols = -c(PSN, total_sdoh), names_to = "Determinant") |>
+
+  count(Determinant, value)
+
+sdoh_people_total |>
+  pivot_wider(names_from = value, values_from = n) |>
+  mutate(prop = `1` / (`0` + `1`))
+
+
+
+sdoh_people_total |> arrange(desc(count))
+
+# ---- People with multiple social determinants ----
+referrals_sdoh <-
+  referrals_sdoh |>
+  mutate(total_sdoh = rowSums(across(`Social isolation`:`Financial difficulty`)))
+
+referrals_sdoh |>
+  distinct(PSN, total_sdoh) |>
+  count(total_sdoh) |>
+  mutate(prop = n/sum(n))
 
 # ---- Compare people with and without specific SDOHs ----
 sdoh_table <- function(d, x, sdoh) {
@@ -101,34 +144,6 @@ ggcoef_plot(coef_isolation, exponentiate = TRUE)
 #TODO: use relaimpo to quantify relative importance of predictors
 
 #TODO in future, when we have several social determinants labelled: multinomial logistic regression?
-
-# ---- How many people experienced which social determinants? ----
-sdoh_people_total <-
-  referrals_sdoh |>
-  select(PSN, `Social isolation`:`Financial difficulty`) |>
-  distinct() |>
-
-  pivot_longer(cols = -PSN, names_to = "Determinant") |>
-
-  count(Determinant, value)
-
-sdoh_people_total |>
-  pivot_wider(names_from = value, values_from = n) |>
-  mutate(prop = `1` / (`0` + `1`))
-
-
-
-sdoh_people_total |> arrange(desc(count))
-
-# ---- People with multiple social determinants ----
-referrals_sdoh <-
-  referrals_sdoh |>
-  mutate(total_sdoh = rowSums(across(`Social isolation`:`Financial difficulty`)))
-
-referrals_sdoh |>
-  distinct(PSN, total_sdoh) |>
-  count(total_sdoh) |>
-  mutate(prop = n/sum(n))
 
 # ---- Co-occurrence matrix of social determinants ----
 # Source: https://stackoverflow.com/a/10623146
