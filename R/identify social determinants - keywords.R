@@ -2,17 +2,7 @@ library(tidyverse)
 library(janitor)
 library(geographr)
 library(IMD)
-library(broom)
-library(ggstats)
 library(arrow)
-
-# Install package to explore Relative Importance of Regressors in Linear Models
-# https://cran.r-project.org/web/packages/relaimpo/relaimpo.pdf
-# The package maintainer says there's functionality on a version available via her website that isn't on CRAN.
-# First, install from CRAN, then install from source, downloaded via https://prof.bht-berlin.de/groemping/software/relaimpo2-1
-# install.packages("relaimpo")
-# install.packages("C:/Users/040026704/Downloads/relaimpo_2.2-5.zip", repos = NULL, type="source")
-library(relaimpo)
 
 conflicted::conflict_prefer("select", "dplyr")
 conflicted::conflict_prefer("filter", "dplyr")
