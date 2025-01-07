@@ -162,3 +162,58 @@ ggsave("outputs/scotland-healthy-places-subdomains.png", width = 200, height = 1
 
 # Use interactive plot to manually check which Council Areas rank where
 ggplotly()
+
+# ---- Compare health outcomes for places with poor social determinants ----
+# Wrangle Healthy People subdomains
+subdomains_people <-
+  scotland_health_index_subdomains |>
+  select(ltla24_code, starts_with("people_")) |>
+  pivot_longer(cols = -ltla24_code, names_to = "subdomain", values_to = "score") |>
+
+  # Prettify subdomain names
+  mutate(
+    subdomain = str_remove(subdomain, "^people_") |>
+      str_replace_all("_", " ") |>
+      str_to_sentence()
+  ) |>
+  mutate(subdomain = fct_rev(subdomain)) |>
+
+  left_join(council_area_names, by = join_by(ltla24_code == ltla21_code))
+
+subdomains_people |>
+  mutate(highlighted_places = if_else(str_detect(ltla21_name, "Argyll|West Dunbarton"), "highlight", "no")) |>
+
+  ggplot(aes(x = score, y = subdomain)) +
+
+  geom_vline(xintercept = 0, linetype = 2) +  # Show line for average
+  geom_beeswarm(aes(text = ltla21_name, colour = highlighted_places)) +
+
+  scale_x_continuous(
+    breaks = c(-2.7, 0, 1.4),
+    labels = c("← Worse than average", "Average", "Better than average →"),
+    position = "top"
+  ) +
+
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 16, face = "bold", color = brc_colours$black_shadow),
+    plot.title.position = "plot",
+    panel.background = element_rect(fill = "white", colour = NA),
+    plot.background = element_rect(fill = "white", colour = NA),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank()
+  ) +
+
+  labs(
+    title = "Health status and outcomes",
+    x = NULL,
+    y = NULL
+  )
+
+ggplotly()
+
+# Calcualte mean absolute deviation for each subdomain
+#... to work out whether an area is properly above/below average
+subdomains_people |>
+  group_by(subdomain) |>
+  summarise(mad = mad(score, center = mean(subdomain)))
