@@ -1,10 +1,12 @@
 library(tidyverse)
 library(geographr)
+library(demographr)
 library(healthindexscotland)
 library(ggbeeswarm)
-library(GGally)
 library(brcplot)
 library(plotly)
+library(GGally)
+library(IMD)
 library(sf)
 
 # healthindexscotland::scotland_health_index |>
@@ -26,7 +28,8 @@ scotland_health_index |>
   arrange(healthy_places_quantile)
 
 # Make a map
-geographr::boundaries_ltla21 |>
+scotland_map_data <-
+  geographr::boundaries_ltla21 |>
   filter(str_detect(ltla21_code, "^S")) |>
 
   left_join(
@@ -35,8 +38,9 @@ geographr::boundaries_ltla21 |>
   ) |>
 
   # Convert decile to quintile
-  mutate(healthy_places_quantile = ceiling(healthy_places_quantile / 2)) |>
+  mutate(healthy_places_quantile = ceiling(healthy_places_quantile / 2))
 
+scotland_map_data |>
   ggplot() +
   geom_sf(aes(fill = factor(healthy_places_quantile))) +
   scale_fill_brewer(type="seq", palette = "Reds", direction = -1, labels = c("Worst 20%", "2", "3", "4", "Best 20%")) +
@@ -46,6 +50,16 @@ geographr::boundaries_ltla21 |>
   )
 
 ggsave("outputs/scotland-healthy-places.png", height = 200, width = 200, units = "mm")
+
+# Map highlighting Argyll and W. Dunbartonshire
+scotland_map_data |>
+  mutate(ltla_subset = if_else(str_detect(ltla21_name, "Argyll|West Dunbarton"), ltla21_name, "Other")) |>
+  ggplot() +
+  geom_sf(aes(fill = ltla_subset), show.legend = FALSE) +
+  scale_fill_manual(values = c(brc_colours$sky, "white", brc_colours$red_dunant)) +
+  theme_brc_map()
+
+ggsave("outputs/scotland-map-argyll-dunbartonshire.png", height = 200, width = 200, units = "mm")
 
 # ---- Which Council Areas have better/worse health outcomes (People) than expected given their social determinants (Places)? ----
 # ... and why: i.e. which subdomains do well/badly?
@@ -86,7 +100,7 @@ subdomains_and_outcomes <-
 
   left_join(council_area_names, by = join_by(ltla24_code == ltla21_code))
 
-# Plot people and places subdomain scores, highlighting Edinburgh and W. Dunbartonshire
+# Plot people and places subdomain scores, highlighting Argyll & Bute and W. Dunbartonshire
 # This will be used to write a narrative analysis; the chart won't be published so not putting in effort to make it look nice
 subdomains_and_outcomes |>
   ggplot(aes(x = score, y = subdomain)) +
@@ -95,8 +109,8 @@ subdomains_and_outcomes |>
   geom_beeswarm(aes(text = ltla21_name)) +
   # Plot West Dunbartonshire
   geom_beeswarm(data = subdomains_and_outcomes |> filter(ltla24_code == "S12000039"), colour = "red") +
-  # Plot Edinburgh
-  geom_beeswarm(data = subdomains_and_outcomes |> filter(ltla24_code == "S12000036"), colour = "green") +
+  # Plot Argyll & Bute
+  geom_beeswarm(data = subdomains_and_outcomes |> filter(ltla24_code == "S12000035"), colour = "green") +
 
   scale_x_continuous(
     breaks = c(-2.7, 0, 1.4),
@@ -181,18 +195,22 @@ subdomains_people <-
   left_join(council_area_names, by = join_by(ltla24_code == ltla21_code))
 
 subdomains_people |>
-  mutate(highlighted_places = if_else(str_detect(ltla21_name, "Argyll|West Dunbarton"), "highlight", "no")) |>
+  mutate(highlighted_places = if_else(str_detect(ltla21_name, "Argyll|West Dunbarton"), ltla21_name, "no")) |>
 
   ggplot(aes(x = score, y = subdomain)) +
 
   geom_vline(xintercept = 0, linetype = 2) +  # Show line for average
-  geom_beeswarm(aes(text = ltla21_name, colour = highlighted_places)) +
+  geom_beeswarm(
+    aes(text = ltla21_name, colour = highlighted_places),
+    show.legend = FALSE
+  ) +
 
   scale_x_continuous(
-    breaks = c(-2.7, 0, 1.4),
+    breaks = c(-1.4, 0, 1.8),
     labels = c("← Worse than average", "Average", "Better than average →"),
     position = "top"
   ) +
+  scale_colour_manual(values = c(brc_colours$sky, brc_colours$grey_fog, brc_colours$red_dunant)) +
 
   theme_minimal() +
   theme(
@@ -210,6 +228,8 @@ subdomains_people |>
     y = NULL
   )
 
+ggsave("outputs/scotland-healthy-people-subdomains.png", width = 200, height = 100, units = "mm")
+
 ggplotly()
 
 # Calcualte mean absolute deviation for each subdomain
@@ -217,3 +237,38 @@ ggplotly()
 subdomains_people |>
   group_by(subdomain) |>
   summarise(mad = mad(score, center = mean(subdomain)))
+
+# ---- Social infrastructure in Argyll and W. Dunbartonshire ----
+cni_comparison <-
+  IMD::cni_scotland_iz11 |>
+  left_join(
+    geographr::lookup_dz11_iz11_ltla20 |> distinct(iz11_code, ltla20_name)
+  ) |>
+  left_join(demographr::population21_iz11, by = join_by(iz11_code))
+
+cni_comparison |>
+  mutate(ltla_subset = if_else(str_detect(ltla20_name, "Argyll|West Dunbarton"), ltla20_name, "Other")) |>
+  select(ltla_subset, ends_with("rank")) |>
+  pivot_longer(cols = ends_with("rank"), names_to = "domain", values_to = "rank") |>
+
+  ggplot(aes(x = rank, y = ltla_subset)) +
+  geom_beeswarm() +
+  facet_wrap(~domain)
+
+cni_ltla <-
+  cni_comparison |>
+  compositr::calculate_extent(
+    higher_level_geography = ltla20_name,
+    var = `Community Needs Index score`,
+    population = total_population,
+    invert_percentiles = TRUE
+  )
+
+civic_assets_ltla <-
+  cni_comparison |>
+  compositr::calculate_extent(
+    higher_level_geography = ltla20_name,
+    var = `Civic Assets score`,
+    population = total_population,
+    invert_percentiles = TRUE
+  )
