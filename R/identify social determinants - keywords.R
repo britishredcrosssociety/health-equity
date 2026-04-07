@@ -1,5 +1,6 @@
 library(tidyverse)
 library(geographr)
+library(readxl)
 library(IMD)
 
 conflicted::conflict_prefer("select", "dplyr")
@@ -16,25 +17,29 @@ uk_imd <-
   mutate(IMD_quintile = ceiling(IMD_decile / 2))
 
 # ---- Load BRC data with referral notes/comments ----
-referrals_raw <- read_csv("data/BRM_data_anon.csv")
+# referrals_raw <- read_csv("data/BRM_data_anon.csv")
+referrals_raw <- read_excel("data/Full Case and SU Data2.xlsx", sheet = " Case Data, PSN, Risk, unpivot")
+
+# What years are in the dataset?
+referrals_raw |>
+  count(year = year(`Referral Date/Time`), sort = TRUE)
 
 # Combine referral reasons and comments into a single field
 # and remove rows without any notes
 referrals <-
   referrals_raw |>
-  select(-`...1`, -referral_comments_anon) |>
-  filter(`Referral reason` != "NULL" & `Referral comments` != "NULL") |>
-  mutate(Notes = paste(`Referral reason`, `Referral comments`, sep = "\n")) |>
+  # select(-`...1`, -referral_comments_anon) |>
+  filter(`Referral Reason` != "NULL" & `Referral Text` != "NULL") |>
+  mutate(Notes = paste(`Referral Reason`, `Referral Text`, sep = "\n")) |>
   filter(!is.na(Notes))
 
 # Look up deprivation deciles
-referrals <-
-  referrals |>
-  mutate(postcode = str_remove_all(Postcode, " ")) |>
-  left_join(lookup_postcode_oa11_lsoa11_msoa11_ltla20, by = "postcode") |>
-  left_join(uk_imd, by = "lsoa11_code")
-
-#TODO: Add Northern Ireland postcodes --> SOA 2011 lookup, then add their IMD data
+# (commenting this out because IMD is now in the extracted data)
+# referrals <-
+#   referrals |>
+#   mutate(postcode = str_remove_all(Postcode, " ")) |>
+#   left_join(lookup_postcode_oa11_lsoa11_msoa11_ltla20, by = "postcode") |>
+#   left_join(uk_imd, by = "lsoa11_code")
 
 # ---- Load keywords ----
 # Keywords to identify social determinants of health - among people with Alzheimer's disease

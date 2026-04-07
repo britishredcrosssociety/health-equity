@@ -40,10 +40,13 @@ people_sdoh |>
   group_by(PSN) |>
   summarise(Total = sum(total_sdoh)) |>
   ungroup() |>
-  filter(Total >= 6)
+  #filter(Total >= 6)
   count(Total)
 #--> This might not actually be people, since (in some cases) one PSN clearly refers to multiple different people
 
+referrals_sdoh |>
+  filter(PSN == "PSN-421833") |>
+  select(Notes)
 
 # ---- Explore social determinants ----
 
